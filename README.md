@@ -12,6 +12,6 @@ Note: If you give milliseconds then screen is captured for particular millisecon
 
 4. Once completed gif file created on source folder with filename.
 
-5. ![example](https://github.com/prawin20/Gcapture/edit/master/test.gif)
+5. ![example](https://github.com/prawin20/Gcapture/blob/master/test.gif)
 
 
