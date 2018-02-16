@@ -31,20 +31,18 @@ public class Main {
 		robot.keyRelease(KeyEvent.VK_ALT);
 		final Thread thisThread = Thread.currentThread();
 		int i = 0;
+		System.out.println("Capture started");
 		if (args.length == 3) {
 			final int timeToRun = Integer.parseInt(args[2]);
 
-			System.out.println("Capture started");
-			new Thread(new Runnable() {
-				public void run() {
-					try {
-						Thread.sleep(timeToRun);
-						thisThread.interrupt();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-
+			new Thread(() -> {
+				try {
+					Thread.sleep(timeToRun);
+					thisThread.interrupt();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
+
 			}).start();
 
 			while (!Thread.interrupted()) {
