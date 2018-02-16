@@ -30,26 +30,38 @@ public class Main {
 		robot.keyRelease(KeyEvent.VK_TAB);
 		robot.keyRelease(KeyEvent.VK_ALT);
 		final Thread thisThread = Thread.currentThread();
-		final int timeToRun = Integer.parseInt(args[0]);
-		System.out.println("Capture started");
-		new Thread(new Runnable() {
-			public void run() {
-				try {
-					Thread.sleep(timeToRun);
-					thisThread.interrupt();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-
-			}
-		}).start();
 		int i = 0;
-		while (!Thread.interrupted()) {
-			main.screenCapture(i, args[1]);
-			i++;
+		if (args.length == 3) {
+			final int timeToRun = Integer.parseInt(args[2]);
+
+			System.out.println("Capture started");
+			new Thread(new Runnable() {
+				public void run() {
+					try {
+						Thread.sleep(timeToRun);
+						thisThread.interrupt();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+
+				}
+			}).start();
+
+			while (!Thread.interrupted()) {
+				main.screenCapture(i, args[0]);
+				i++;
+			}
+		}
+
+		else {
+			while (System.in.available() == 0) {
+				main.screenCapture(i, args[0]);
+				i++;
+			}
+			i = i - 20;
 		}
 		System.out.println("Capture ended");
-		main.toGifSequence(i, args[1], args[2]);
+		main.toGifSequence(i, args[0], args[1]);
 
 	}
 
@@ -81,12 +93,16 @@ public class Main {
 
 		// write out the first image to our sequence...
 		writer.writeToSequence(firstImage);
-		for (int i = 0; i < num; i++) {
+		int i = 0;
+		for (i = 0; i < num; i++) {
 			BufferedImage nextImage = ImageIO.read(new File(path + File.separator + fileName + i + ".jpg"));
 			writer.writeToSequence(nextImage);
 			new File(path + File.separator + fileName + i + ".jpg").delete();
 		}
-
+		int j = i + 20;
+		for (; i < j; i++) {
+			new File(path + File.separator + fileName + i + ".jpg").delete();
+		}
 		writer.close();
 		output.close();
 		System.out.println("GIF convertion ends");
